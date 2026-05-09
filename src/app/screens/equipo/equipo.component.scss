@@ -1,0 +1,172 @@
+:host {
+  display: block;
+}
+
+.team-page {
+  position: relative;
+  display: grid;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  padding: clamp(2rem, 4vw, 3rem) 0 4rem;
+  color: #241d18;
+}
+
+.team-page::before {
+  content: '';
+  position: absolute;
+  inset: 2rem auto auto -2rem;
+  width: min(22rem, 34vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(111, 140, 104, 0.16), rgba(111, 140, 104, 0));
+  pointer-events: none;
+  filter: blur(2px);
+}
+
+.team-hero {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem) 0 0;
+  text-align: center;
+}
+
+.team-showcase {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.5rem, 3vw, 3rem);
+}
+
+.team-profile {
+  display: grid;
+  gap: 1.75rem;
+  justify-items: center;
+}
+
+.team-profile__media {
+  width: 100%;
+  max-width: 25rem;
+  margin: 0;
+  overflow: hidden;
+  background: #e8e2da;
+  box-shadow: 0 24px 50px rgba(36, 29, 24, 0.12);
+}
+
+.team-profile__image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 0.9;
+  object-fit: cover;
+  transition: transform 280ms ease;
+}
+
+.team-profile:hover .team-profile__image,
+.team-profile:focus-within .team-profile__image {
+  transform: scale(1.03);
+}
+
+.team-profile__content {
+  max-width: 28rem;
+  text-align: center;
+}
+
+.team-principles {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.team-principle {
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.66);
+  box-shadow: 0 18px 40px rgba(36, 29, 24, 0.08);
+}
+
+.section-kicker,
+.team-profile__role,
+.team-principle span {
+  color: #536d4d;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.section-kicker {
+  margin: 0 0 0.75rem;
+}
+
+h1,
+h2 {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+h1 {
+  font-size: clamp(3rem, 5vw, 4.8rem);
+  line-height: 0.95;
+}
+
+h2 {
+  font-size: clamp(2.3rem, 3.5vw, 3.1rem);
+  line-height: 1;
+}
+
+.team-lead {
+  max-width: 42rem;
+  margin: 0;
+  font-size: 1.02rem;
+}
+
+.team-profile__role {
+  margin: 1rem 0 1.1rem;
+}
+
+.team-profile__content p:last-child {
+  margin: 0;
+}
+
+.team-principle p {
+  margin: 0.85rem 0 0;
+}
+
+p {
+  color: #6f6358;
+  line-height: 1.75;
+}
+
+@media (max-width: 900px) {
+  .team-showcase,
+  .team-principles {
+    grid-template-columns: 1fr;
+  }
+
+  .team-profile__media {
+    max-width: 30rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .team-page {
+    gap: 2rem;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 11vw, 3.4rem);
+  }
+
+  h2 {
+    font-size: clamp(2rem, 8vw, 2.6rem);
+  }
+
+  .team-profile {
+    gap: 1.25rem;
+  }
+
+  .team-principle {
+    padding: 1.25rem;
+  }
+}

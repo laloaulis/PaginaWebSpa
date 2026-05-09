@@ -1,0 +1,119 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.page-footer {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(280px, 34rem);
+  gap: 2rem;
+  align-items: start;
+  margin-top: clamp(1.5rem, 4vw, 2.5rem);
+  padding-top: clamp(2.5rem, 6vw, 3.5rem);
+  padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.page-footer::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: min(100%, 58rem);
+  height: 1px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    90deg,
+    rgba(83, 109, 77, 0),
+    rgba(83, 109, 77, 0.18) 18%,
+    rgba(36, 29, 24, 0.38) 50%,
+    rgba(83, 109, 77, 0.18) 82%,
+    rgba(83, 109, 77, 0)
+  );
+}
+
+.page-footer__brand h3,
+.page-footer__link {
+  margin: 0;
+  font-family: 'Cormorant Garamond', serif;
+}
+
+.page-footer__brand h3 {
+  color: #241d18;
+  font-size: clamp(2.3rem, 4vw, 3.2rem);
+  line-height: 1;
+}
+
+.page-footer__brand p {
+  max-width: 18rem;
+  margin: 1rem 0 0;
+  color: #6f6358;
+  line-height: 1.75;
+}
+
+.page-footer__contact {
+  justify-self: end;
+  text-align: right;
+}
+
+.page-footer__eyebrow {
+  margin: 0 0 1.25rem;
+  color: #241d18;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.page-footer__link,
+.page-footer__inline-link {
+  color: #536d4d;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.16em;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.page-footer__link {
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.08;
+}
+
+.page-footer__phone {
+  display: inline-block;
+  margin-top: 1rem;
+  color: #241d18;
+  font-size: clamp(1.25rem, 2.1vw, 1.8rem);
+  line-height: 1.2;
+  transform-origin: center;
+}
+
+.page-footer__phone:hover,
+.page-footer__phone:focus-visible {
+  transform: translateY(-4px);
+}
+
+.page-footer__inline-link {
+  display: inline-block;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.page-footer__link:hover,
+.page-footer__link:focus-visible,
+.page-footer__inline-link:hover,
+.page-footer__inline-link:focus-visible {
+  color: #241d18;
+  outline: none;
+}
+
+@media (max-width: 900px) {
+  .page-footer {
+    grid-template-columns: 1fr;
+  }
+
+  .page-footer__contact {
+    justify-self: start;
+    text-align: left;
+  }
+}

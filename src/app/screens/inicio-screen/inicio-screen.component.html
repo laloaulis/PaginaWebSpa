@@ -1,0 +1,271 @@
+<div class="inicio-screen">
+  <header class="header" #header [class.header--mobile-open]="isMobileMenuOpen">
+    <nav class="nav-menu" aria-label="Navegacion principal">
+      <button
+        class="logo main-logo"
+        type="button"
+        [class.active]="activeComponent === 'inicio'"
+        [attr.aria-current]="activeComponent === 'inicio' ? 'page' : null"
+        (click)="setActiveComponent('inicio')"
+        data-component="inicio">
+        Glory Spa
+      </button>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        (click)="toggleMobileMenu()"
+        [attr.aria-expanded]="isMobileMenuOpen"
+        aria-controls="main-navigation-list"
+        [attr.aria-label]="isMobileMenuOpen ? 'Cerrar menu de navegacion' : 'Abrir menu de navegacion'">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <ul class="menu-list" id="main-navigation-list" [class.menu-list--open]="isMobileMenuOpen">
+        <li>
+          <button
+            class="menu-item"
+            type="button"
+            [class.active]="activeComponent === 'servicios'"
+            [attr.aria-current]="activeComponent === 'servicios' ? 'page' : null"
+            (click)="setActiveComponent('servicios')"
+            data-component="servicios">
+            Servicios
+          </button>
+        </li>
+        <li>
+          <button
+            class="menu-item"
+            type="button"
+            [class.active]="activeComponent === 'acerca-de'"
+            [attr.aria-current]="activeComponent === 'acerca-de' ? 'page' : null"
+            (click)="setActiveComponent('acerca-de')"
+            data-component="acerca-de">
+            Acerca de
+          </button>
+        </li>
+        <li>
+          <button
+            class="menu-item"
+            type="button"
+            [class.active]="activeComponent === 'equipo'"
+            [attr.aria-current]="activeComponent === 'equipo' ? 'page' : null"
+            (click)="setActiveComponent('equipo')"
+            data-component="equipo">
+            Equipo
+          </button>
+        </li>
+        <li>
+          <button
+            class="menu-item"
+            type="button"
+            [class.active]="activeComponent === 'galeria'"
+            [attr.aria-current]="activeComponent === 'galeria' ? 'page' : null"
+            (click)="setActiveComponent('galeria')"
+            data-component="galeria">
+            Galeria
+          </button>
+        </li>
+        <li>
+          <button
+            class="menu-item"
+            type="button"
+            [class.active]="activeComponent === 'ubicacion'"
+            [attr.aria-current]="activeComponent === 'ubicacion' ? 'page' : null"
+            (click)="setActiveComponent('ubicacion')"
+            data-component="ubicacion">
+            Ubicacion
+          </button>
+        </li>
+      </ul>
+    </nav>
+  </header>
+
+  <section *ngIf="activeComponent === 'inicio'" class="home-content" #inicioSection>
+    <section class="hero" aria-labelledby="inicio-title">
+      <div class="images left" aria-hidden="true">
+        <img src="assets/images/img1_inicio.jpg" class="img" alt="">
+        <img src="assets/images/img2_inicio.jpg" class="img" alt="">
+        <img src="assets/images/img3_inicio.jpg" class="img" alt="">
+        <img src="assets/images/img7_inicio.jpg" class="img" alt="">
+        <img src="assets/images/img8_inicio.jpg" class="img" alt="">
+      </div>
+
+      <div class="hero-content">
+        <p class="hero-kicker">Rituales faciales y corporales en Veracruz</p>
+        <h1 id="inicio-title">
+          El arte de <span>consentirte</span><br>
+          en manos expertas
+        </h1>
+        <p class="hero-copy">
+          Vive una experiencia de relajacion y cuidado de la piel pensada para bajar el ritmo,
+          respirar y salir mejor de como llegaste.
+        </p>
+
+        <div class="buttons">
+          <button class="hero-button hero-button--primary" type="button" (click)="openPromoModal()">
+            Promoción del mes
+          </button>
+          <a
+            class="hero-button hero-button--secondary"
+            href="https://wa.me/522291691480"
+            target="_blank"
+            rel="noopener noreferrer">
+            agenda por WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div class="images right" aria-hidden="true">
+        <img src="assets/images/img4_inicio.jpg" class="img" alt="">
+        <img src="assets/images/img5_inicio.jpg" class="img" alt="">
+        <img src="assets/images/img6_inicio.jpg" class="img" alt="">
+        <img src="assets/images/img9_inicio.jpg" class="img" alt="">
+        <img src="assets/images/img10_inicio.jpg" class="img" alt="">
+      </div>
+    </section>
+
+    <section class="images-container" aria-label="Accesos rapidos">
+      <article class="side-block">
+        <img
+          src="assets/images/img_lateral1.jpg"
+          alt="Cabina de tratamiento corporal en Glory Spa"
+          class="side-image"
+          loading="lazy">
+        <button class="side-cta" type="button" (click)="setActiveComponent('servicios', 'corporales')">
+          Ir a tratamientos corporales
+        </button>
+      </article>
+
+      <article class="side-block--offset">
+        <button class="side-cta" type="button" (click)="setActiveComponent('servicios', 'faciales')">
+          Ir a tratamientos faciales
+        </button>
+        <img
+          src="assets/images/img_lateral2.jpg"
+          alt="Preparacion de tratamiento facial en cabina"
+          class="side-image"
+          loading="lazy">
+      </article>
+    </section>
+
+    <section class="full-image-section" #fullImageSection>
+      <img src="assets/images/full-image.jpg" alt="Detalle de una experiencia de relajacion" class="full-image" loading="lazy">
+      <div class="full-image-panel">
+        <p class="full-image-eyebrow">Nuestra filosofia</p>
+        <h2>
+          Un refugio donde la piel se trata con respeto y el bienestar se siente en cada detalle.
+        </h2>
+        <button class="hero-button hero-button--light full-image-cta" type="button" (click)="setActiveComponent('acerca-de')">
+          nuestra historia
+        </button>
+      </div>
+    </section>
+
+    <section class="testimonials-section" aria-labelledby="testimonials-title">
+      <div class="section-heading">
+        <p class="section-kicker">Experiencias</p>
+        <h2 id="testimonials-title">Lo que se siente al venir a Glory Spa</h2>
+        <p>
+          Comentarios reales compartidos por clientas y clientes en Google Maps sobre su experiencia en Harmony Clinica Spa.
+        </p>
+      </div>
+
+      <div class="testimonials-grid">
+        <article class="testimonial-card">
+          <p>
+            Destacan la excelente atencion, la experiencia de Gloria y el enfoque personalizado de cada sesion segun tus necesidades.
+          </p>
+          <span>Gabriela Alejandra Mendez Castro</span>
+          <a
+            class="testimonial-source"
+            href="https://maps.app.goo.gl/2DtraobQpLetNADx9"
+            target="_blank"
+            rel="noopener noreferrer">
+            Ver resena en Google Maps
+          </a>
+        </article>
+        <article class="testimonial-card">
+          <p>
+            Un cliente comenta que fue un regalo para su esposa, que ella lo disfruto mucho y percibio gran profesionalismo.
+          </p>
+          <span>Williams Cossio</span>
+          <a
+            class="testimonial-source"
+            href="https://maps.app.goo.gl/E6mPLXNMoWCNKN7k6"
+            target="_blank"
+            rel="noopener noreferrer">
+            Ver resena en Google Maps
+          </a>
+        </article>
+        <article class="testimonial-card">
+          
+          <p>
+            Resaltan el servicio, las instalaciones y un ambiente muy confortable para relajarte desde que llegas.
+          </p>
+          <span>Lalo Aulis</span>
+          <a
+            class="testimonial-source"
+            href="https://maps.app.goo.gl/11hXhZEq9Zb4DHW66"
+            target="_blank"
+            rel="noopener noreferrer">
+            Ver resena en Google Maps
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer-section">
+      <app-page-footer></app-page-footer>
+    </footer>
+  </section>
+
+  <section
+    *ngIf="isPromoModalOpen"
+    class="promo-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="promo-modal-title"
+    (click)="closePromoModal()">
+    <div class="promo-modal__dialog" (click)="$event.stopPropagation()">
+      <button
+        class="promo-modal__close"
+        type="button"
+        aria-label="Cerrar promocion"
+        (click)="closePromoModal()">
+        Cerrar
+      </button>
+
+      <div class="promo-modal__content">
+        <p class="promo-modal__eyebrow">Promocion vigente</p>
+        <h2 id="promo-modal-title">Promocion del mes</h2>
+
+        <figure class="promo-modal__media">
+          <img
+            class="promo-modal__image"
+            [src]="promoImageSrc"
+            [alt]="promoImageAlt">
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section" #contentSection [attr.aria-live]="activeComponent === 'inicio' ? null : 'polite'">
+    <app-servicios *ngIf="activeComponent === 'servicios'"></app-servicios>
+    <app-acerca-de *ngIf="activeComponent === 'acerca-de'"></app-acerca-de>
+    <app-equipo *ngIf="activeComponent === 'equipo'"></app-equipo>
+    <app-galeria *ngIf="activeComponent === 'galeria'"></app-galeria>
+    <app-ubicacion *ngIf="activeComponent === 'ubicacion'"></app-ubicacion>
+  </section>
+
+  <a
+    class="floating-whatsapp"
+    href="https://wa.me/522291691480"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Abrir WhatsApp para agendar una cita">
+    <img class="floating-whatsapp__img" src="assets/images/wasa.png" alt="">
+  </a>
+</div>

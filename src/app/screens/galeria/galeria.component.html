@@ -1,0 +1,57 @@
+<section class="gallery-page">
+  <div class="gallery-intro">
+    <p class="section-kicker">Galeria</p>
+    <h1>Texturas, luz y rincones que construyen la experiencia.</h1>
+    <p>
+      Una muestra del ambiente y los detalles que acompanan cada sesion dentro de Glory Spa.
+    </p>
+  </div>
+
+  <div class="gallery-grid">
+    <button
+      *ngFor="let image of images; let index = index"
+      class="gallery-item"
+      type="button"
+      (click)="openImage(index)"
+      [attr.aria-label]="'Ampliar imagen ' + (index + 1)">
+      <img [src]="image.src" [alt]="image.alt" loading="lazy">
+    </button>
+  </div>
+
+  <div
+    *ngIf="selectedImage"
+    class="gallery-lightbox"
+    (click)="closeImage()"
+    aria-modal="true"
+    role="dialog">
+    <button
+      class="gallery-lightbox__nav gallery-lightbox__nav--prev"
+      type="button"
+      (click)="showPreviousImage(); $event.stopPropagation()"
+      aria-label="Ver imagen anterior">
+      &lsaquo;
+    </button>
+
+    <button
+      class="gallery-lightbox__nav gallery-lightbox__nav--next"
+      type="button"
+      (click)="showNextImage(); $event.stopPropagation()"
+      aria-label="Ver imagen siguiente">
+      &rsaquo;
+    </button>
+
+    <button
+      class="gallery-lightbox__close"
+      type="button"
+      (click)="closeImage(); $event.stopPropagation()"
+      aria-label="Cerrar imagen ampliada">
+      Cerrar
+    </button>
+
+    <div class="gallery-lightbox__frame" (click)="$event.stopPropagation()">
+      <img [src]="selectedImage.src" [alt]="selectedImage.alt">
+    </div>
+  </div>
+
+  <app-page-footer></app-page-footer>
+</section>
