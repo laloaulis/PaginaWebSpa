@@ -86,11 +86,11 @@
   <section *ngIf="activeComponent === 'inicio'" class="home-content" #inicioSection>
     <section class="hero" aria-labelledby="inicio-title">
       <div class="images left" aria-hidden="true">
-        <img src="assets/images/img1_inicio.jpg" class="img" alt="">
-        <img src="assets/images/img2_inicio.jpg" class="img" alt="">
-        <img src="assets/images/img3_inicio.jpg" class="img" alt="">
-        <img src="assets/images/img7_inicio.jpg" class="img" alt="">
-        <img src="assets/images/img8_inicio.jpg" class="img" alt="">
+        <img src="assets/images/img1_inicio.jpg" class="img img--left-1" alt="">
+        <img src="assets/images/img2_inicio.jpg" class="img img--left-2" alt="">
+        <img src="assets/images/img3_inicio.jpg" class="img img--left-3" alt="">
+        <img src="assets/images/img7_inicio.jpg" class="img img--left-4" alt="">
+        <img src="assets/images/img8_inicio.jpg" class="img img--left-5" alt="">
       </div>
 
       <div class="hero-content">
@@ -119,11 +119,11 @@
       </div>
 
       <div class="images right" aria-hidden="true">
-        <img src="assets/images/img4_inicio.jpg" class="img" alt="">
-        <img src="assets/images/img5_inicio.jpg" class="img" alt="">
-        <img src="assets/images/img6_inicio.jpg" class="img" alt="">
-        <img src="assets/images/img9_inicio.jpg" class="img" alt="">
-        <img src="assets/images/img10_inicio.jpg" class="img" alt="">
+        <img src="assets/images/img4_inicio.jpg" class="img img--right-1" alt="">
+        <img src="assets/images/img5_inicio.jpg" class="img img--right-2" alt="">
+        <img src="assets/images/img6_inicio.jpg" class="img img--right-3" alt="">
+        <img src="assets/images/img9_inicio.jpg" class="img img--right-4" alt="">
+        <img src="assets/images/img10_inicio.jpg" class="img img--right-5" alt="">
       </div>
     </section>
 
@@ -240,15 +240,24 @@
 
       <div class="promo-modal__content">
         <p class="promo-modal__eyebrow">Promocion vigente</p>
-        <h2 id="promo-modal-title">Promocion del mes</h2>
 
         <figure class="promo-modal__media">
           <img
             class="promo-modal__image"
             [src]="promoImageSrc"
-            [alt]="promoImageAlt">
+            [alt]="promoImageAlt"
+            (click)="openPromoImageFullscreen()"
+            role="button"
+            tabindex="0">
         </figure>
       </div>
+    </div>
+  </section>
+
+  <section *ngIf="isPromoImageFullscreen" class="promo-fullscreen" (click)="closePromoImageFullscreen()">
+    <div class="promo-fullscreen__inner" (click)="$event.stopPropagation()">
+      <button class="promo-fullscreen__close" type="button" aria-label="Cerrar imagen" (click)="closePromoImageFullscreen()">Cerrar</button>
+      <img class="promo-fullscreen__image" [src]="promoImageSrc" [alt]="promoImageAlt">
     </div>
   </section>
 

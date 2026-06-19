@@ -33,9 +33,14 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
   activeComponent: ActiveSection = 'inicio';
   isMobileMenuOpen = false;
   isPromoModalOpen = false;
+  isPromoImageFullscreen = false;
   lastScroll = 0;
-  readonly promoImageSrc = 'assets/images/full-image.jpg';
+  readonly promoImageSrc = 'assets/images/promo.jpeg';
   readonly promoImageAlt = 'Promocion del mes de Glory Spa';
+  readonly promoTitle = 'Promoción del mes: Ritual de hidratación';
+  readonly promoDescription = 'Aprovecha un 20% de descuento en nuestro Ritual de Hidratación durante todo el mes. Incluye diagnóstico facial y masaje especializado.';
+  readonly promoCtaText = 'Reservar ahora por WhatsApp';
+  readonly promoCtaHref = 'https://wa.me/522291691480?text=Hola,%20quiero%20reservar%20la%20promoci%C3%B3n%20del%20mes';
 
   private scrollTimeout: ReturnType<typeof setTimeout> | null = null;
   private readonly scrollThreshold = 10;
@@ -112,6 +117,11 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('document:keydown.escape')
   onEscapeKey(): void {
+    if (this.isPromoImageFullscreen) {
+      this.closePromoImageFullscreen();
+      return;
+    }
+
     if (this.isPromoModalOpen) {
       this.closePromoModal();
       return;
@@ -211,6 +221,20 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
 
     this.isPromoModalOpen = false;
     this.setBodyScrollLock(this.isMobileMenuOpen);
+  }
+
+  openPromoImageFullscreen(): void {
+    this.isPromoImageFullscreen = true;
+    this.setBodyScrollLock(true);
+  }
+
+  closePromoImageFullscreen(): void {
+    if (!this.isPromoImageFullscreen) {
+      return;
+    }
+
+    this.isPromoImageFullscreen = false;
+    this.setBodyScrollLock(this.isPromoModalOpen || this.isMobileMenuOpen);
   }
 
   private scrollToElement(element: HTMLElement): void {

@@ -51,14 +51,15 @@
   max-width: 25rem;
   margin: 0;
   overflow: hidden;
-  background: #e8e2da;
-  box-shadow: 0 24px 50px rgba(36, 29, 24, 0.12);
+  background: transparent;
+  box-shadow: none;
+  aspect-ratio: 0.9;
 }
 
 .team-profile__image {
   display: block;
   width: 100%;
-  aspect-ratio: 0.9;
+  height: 100%;
   object-fit: cover;
   transition: transform 280ms ease;
 }

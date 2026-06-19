@@ -230,26 +230,28 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   width: min(100%, 24rem);
   max-width: 100%;
-  min-height: 3.4rem;
-  padding: 0.85rem 1.4rem;
+  min-height: 52px;
+  padding: 0.9rem 1.4rem;
   border-radius: 999px;
-  background: #241d18;
-  color: #fff;
+  background: rgba(255, 255, 255, 0.9);
+  color: #241d18;
   font-weight: 700;
   text-align: center;
   text-decoration: none;
   white-space: normal;
-  transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease;
-  box-shadow: 0 16px 32px rgba(36, 29, 24, 0.18);
+  cursor: pointer;
+  transition: transform 200ms ease, box-shadow 200ms ease, background-color 200ms ease, color 200ms ease;
+  box-shadow: 0 14px 24px rgba(36, 29, 24, 0.12);
 }
 
 .service-note a:hover,
 .service-note a:focus-visible {
-  background: #536d4d;
-  transform: translateY(-3px);
-  box-shadow: 0 20px 36px rgba(83, 109, 77, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(36, 29, 24, 0.22);
   outline: none;
 }
 
