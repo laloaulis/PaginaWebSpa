@@ -127,6 +127,39 @@
       </div>
     </section>
 
+    <!-- Mobile Staggered Layout with Side Images -->
+    <section class="mobile-highlights" aria-label="Accesos rapidos">
+      <article class="highlight-item highlight-item--left">
+        <figure class="highlight-item__media">
+          <img
+            src="assets/images/img_lateral1.jpg"
+            alt="Cabina de tratamiento corporal en Glory Spa"
+            loading="lazy">
+        </figure>
+        <button class="highlight-item__link" type="button" (click)="setActiveComponent('servicios', 'corporales')">
+          <span>Tratamientos corporales</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </article>
+
+      <article class="highlight-item highlight-item--right">
+        <figure class="highlight-item__media">
+          <img
+            src="assets/images/img_lateral2.jpg"
+            alt="Preparacion de tratamiento facial en cabina"
+            loading="lazy">
+        </figure>
+        <button class="highlight-item__link" type="button" (click)="setActiveComponent('servicios', 'faciales')">
+          <span>Tratamientos faciales</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </article>
+    </section>
+
     <section class="images-container" aria-label="Accesos rapidos">
       <article class="side-block">
         <img
