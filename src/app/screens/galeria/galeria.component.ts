@@ -27,6 +27,8 @@ export class GaleriaComponent implements OnDestroy {
   ];
 
   selectedIndex: number | null = null;
+  private touchStartX = 0;
+  private readonly swipeThreshold = 50;
 
   get selectedImage(): GalleryImage | null {
     if (this.selectedIndex === null) {
@@ -84,6 +86,32 @@ export class GaleriaComponent implements OnDestroy {
   onArrowRightKey(): void {
     if (this.selectedImage) {
       this.showNextImage();
+    }
+  }
+
+  @HostListener('document:touchstart', ['$event'])
+  onTouchStart(event: TouchEvent): void {
+    if (this.selectedImage && event.touches.length > 0) {
+      this.touchStartX = event.touches[0].clientX;
+    }
+  }
+
+  @HostListener('document:touchend', ['$event'])
+  onTouchEnd(event: TouchEvent): void {
+    if (!this.selectedImage || event.changedTouches.length === 0) {
+      return;
+    }
+
+    const touchEndX = event.changedTouches[0].clientX;
+    const swipeDistance = this.touchStartX - touchEndX;
+
+    // Deslizar hacia la izquierda (swipeDistance positivo) = siguiente imagen
+    if (swipeDistance > this.swipeThreshold) {
+      this.showNextImage();
+    }
+    // Deslizar hacia la derecha (swipeDistance negativo) = imagen anterior
+    else if (swipeDistance < -this.swipeThreshold) {
+      this.showPreviousImage();
     }
   }
 
