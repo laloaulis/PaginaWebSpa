@@ -8,6 +8,16 @@ import { UbicacionComponent } from '../ubicacion/ubicacion.component';
 import { PageFooterComponent } from '../../shared/page-footer/page-footer.component';
 
 type ActiveSection = 'inicio' | 'servicios' | 'acerca-de' | 'equipo' | 'galeria' | 'ubicacion';
+type NavigationState = {
+  component: ActiveSection;
+  fragment?: string;
+};
+
+type NavigationOptions = {
+  updateHistory?: boolean;
+  replaceHistory?: boolean;
+  scrollBehavior?: ScrollBehavior;
+};
 
 @Component({
   selector: 'app-inicio-screen',
@@ -30,7 +40,7 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
   @ViewChild('contentSection') contentSection?: ElementRef<HTMLElement>;
   @ViewChild('fullImageSection') fullImageSection?: ElementRef<HTMLElement>;
 
-  activeComponent: ActiveSection = 'inicio';
+  activeComponent: ActiveSection = this.getNavigationStateFromUrl().component;
   isMobileMenuOpen = false;
   isPromoModalOpen = false;
   isPromoImageFullscreen = false;
@@ -133,47 +143,10 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
   }
 
   setActiveComponent(component: ActiveSection, fragment?: string): void {
-    this.closePromoModal();
-    this.closeMobileMenu();
-    this.activeComponent = component;
-
-    requestAnimationFrame(() => {
-      if (fragment) {
-        const fragmentTarget = document.getElementById(fragment);
-        if (fragmentTarget) {
-          this.scrollToElement(fragmentTarget);
-          return;
-        }
-      }
-
-      const fallbackTarget =
-        component === 'inicio'
-          ? this.inicioSection?.nativeElement
-          : this.contentSection?.nativeElement;
-
-      if (fallbackTarget) {
-        this.scrollToElement(fallbackTarget);
-      }
-    });
-
-    const selectedItem = this.header?.nativeElement.querySelector(`[data-component="${component}"]`) as HTMLElement | null;
-
-    if (!selectedItem) {
-      return;
-    }
-
-    if (component === 'inicio') {
-      selectedItem.classList.add('animate-highlight');
-      setTimeout(() => selectedItem.classList.remove('animate-highlight'), 500);
-      requestAnimationFrame(() => {
-        this.restartHeroAnimations();
-        this.observeFullImageSection();
-      });
-      return;
-    }
-
-    selectedItem.classList.add('animate-bounce');
-    setTimeout(() => selectedItem.classList.remove('animate-bounce'), 500);
+    this.applyNavigationState(
+      { component, fragment },
+      { updateHistory: true, scrollBehavior: 'smooth' }
+    );
   }
 
   ngAfterViewInit(): void {
@@ -185,6 +158,14 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
     });
 
     this.observeFullImageSection();
+
+    const initialState = this.getNavigationStateFromUrl();
+    if (initialState.component !== 'inicio' || initialState.fragment) {
+      this.applyNavigationState(initialState, {
+        updateHistory: false,
+        scrollBehavior: 'auto'
+      });
+    }
   }
 
   ngOnDestroy(): void {
@@ -237,13 +218,21 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
     this.setBodyScrollLock(this.isPromoModalOpen || this.isMobileMenuOpen);
   }
 
-  private scrollToElement(element: HTMLElement): void {
+  @HostListener('window:popstate')
+  onPopState(): void {
+    this.applyNavigationState(this.getNavigationStateFromUrl(), {
+      updateHistory: false,
+      scrollBehavior: 'auto'
+    });
+  }
+
+  private scrollToElement(element: HTMLElement, behavior: ScrollBehavior = 'smooth'): void {
     const headerHeight = this.header?.nativeElement.offsetHeight ?? 0;
     const top = element.getBoundingClientRect().top + window.scrollY - headerHeight - 16;
 
     window.scrollTo({
       top: Math.max(top, 0),
-      behavior: 'smooth'
+      behavior
     });
   }
 
@@ -309,5 +298,121 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
     }
 
     document.body.style.overflow = locked ? 'hidden' : '';
+  }
+
+  private applyNavigationState(
+    { component, fragment }: NavigationState,
+    {
+      updateHistory = false,
+      replaceHistory = false,
+      scrollBehavior = 'smooth'
+    }: NavigationOptions
+  ): void {
+    this.closePromoImageFullscreen();
+    this.closePromoModal();
+    this.closeMobileMenu();
+    this.activeComponent = component;
+
+    if (updateHistory) {
+      this.updateBrowserUrl({ component, fragment }, replaceHistory);
+    }
+
+    requestAnimationFrame(() => {
+      if (fragment) {
+        const fragmentTarget = document.getElementById(fragment);
+        if (fragmentTarget) {
+          this.scrollToElement(fragmentTarget, scrollBehavior);
+          return;
+        }
+      }
+
+      const fallbackTarget =
+        component === 'inicio'
+          ? this.inicioSection?.nativeElement
+          : this.contentSection?.nativeElement;
+
+      if (fallbackTarget) {
+        this.scrollToElement(fallbackTarget, scrollBehavior);
+      }
+    });
+
+    this.animateNavigationSelection(component);
+  }
+
+  private animateNavigationSelection(component: ActiveSection): void {
+    const selectedItem = this.header?.nativeElement.querySelector(`[data-component="${component}"]`) as HTMLElement | null;
+
+    if (!selectedItem) {
+      return;
+    }
+
+    if (component === 'inicio') {
+      selectedItem.classList.add('animate-highlight');
+      setTimeout(() => selectedItem.classList.remove('animate-highlight'), 500);
+      requestAnimationFrame(() => {
+        this.restartHeroAnimations();
+        this.observeFullImageSection();
+      });
+      return;
+    }
+
+    selectedItem.classList.add('animate-bounce');
+    setTimeout(() => selectedItem.classList.remove('animate-bounce'), 500);
+  }
+
+  private getNavigationStateFromUrl(): NavigationState {
+    if (typeof window === 'undefined') {
+      return { component: 'inicio' };
+    }
+
+    const url = new URL(window.location.href);
+    const requestedSection = url.searchParams.get('section');
+    const fragment = url.hash ? decodeURIComponent(url.hash.slice(1)) : undefined;
+
+    return {
+      component: this.isActiveSection(requestedSection) ? requestedSection : 'inicio',
+      fragment
+    };
+  }
+
+  private updateBrowserUrl({ component, fragment }: NavigationState, replaceHistory: boolean): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const url = new URL(window.location.href);
+
+    if (component === 'inicio') {
+      url.searchParams.delete('section');
+    } else {
+      url.searchParams.set('section', component);
+    }
+
+    url.hash = fragment ? encodeURIComponent(fragment) : '';
+
+    const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+    if (nextUrl === currentUrl) {
+      return;
+    }
+
+    const state = { section: component, fragment: fragment ?? null };
+
+    if (replaceHistory) {
+      window.history.replaceState(state, '', nextUrl);
+      return;
+    }
+
+    window.history.pushState(state, '', nextUrl);
+  }
+
+  private isActiveSection(value: string | null): value is ActiveSection {
+    return value === 'inicio'
+      || value === 'servicios'
+      || value === 'acerca-de'
+      || value === 'equipo'
+      || value === 'galeria'
+      || value === 'ubicacion';
   }
 }
