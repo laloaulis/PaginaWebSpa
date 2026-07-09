@@ -830,7 +830,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1100px) {
   :host {
     --header-space: 96px;
   }
@@ -1034,6 +1034,9 @@
     border-color: rgba(255, 255, 255, 0.54);
   }
 
+}
+
+@media (max-width: 768px) {
   .hero,
   .images-container,
   .testimonials-section,

@@ -55,7 +55,7 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
   private scrollTimeout: ReturnType<typeof setTimeout> | null = null;
   private readonly scrollThreshold = 10;
   private readonly debounceTime = 100;
-  private readonly mobileBreakpoint = 768;
+  private readonly mobileBreakpoint = 1100;
   private fullImageObserver?: IntersectionObserver;
 
   @HostListener('window:scroll')
