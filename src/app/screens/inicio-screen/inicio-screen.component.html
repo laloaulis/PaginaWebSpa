@@ -206,47 +206,49 @@
         </p>
       </div>
 
-      <div class="testimonials-grid">
-        <article class="testimonial-card">
-          <p>
-            Destacan la excelente atencion, la experiencia de Gloria y el enfoque personalizado de cada sesion segun tus necesidades.
-          </p>
-          <span>Gabriela Alejandra Mendez Castro</span>
-          <a
-            class="testimonial-source"
-            href="https://maps.app.goo.gl/2DtraobQpLetNADx9"
-            target="_blank"
-            rel="noopener noreferrer">
-            Ver resena en Google Maps
-          </a>
-        </article>
-        <article class="testimonial-card">
-          <p>
-            Un cliente comenta que fue un regalo para su esposa, que ella lo disfruto mucho y percibio gran profesionalismo.
-          </p>
-          <span>Williams Cossio</span>
-          <a
-            class="testimonial-source"
-            href="https://maps.app.goo.gl/E6mPLXNMoWCNKN7k6"
-            target="_blank"
-            rel="noopener noreferrer">
-            Ver resena en Google Maps
-          </a>
-        </article>
-        <article class="testimonial-card">
-          
-          <p>
-            Resaltan el servicio, las instalaciones y un ambiente muy confortable para relajarte desde que llegas.
-          </p>
-          <span>Lalo Aulis</span>
-          <a
-            class="testimonial-source"
-            href="https://maps.app.goo.gl/11hXhZEq9Zb4DHW66"
-            target="_blank"
-            rel="noopener noreferrer">
-            Ver resena en Google Maps
-          </a>
-        </article>
+      <div class="testimonials-carousel">
+        <button
+          class="testimonial-nav"
+          type="button"
+          aria-label="Ver opinion anterior"
+          [disabled]="activeTestimonialIndex === 0"
+          (click)="scrollTestimonials('previous')">
+          &lsaquo;
+        </button>
+
+        <div
+          class="testimonials-grid"
+          #testimonialsTrack
+          aria-label="Opiniones de clientes"
+          tabindex="0"
+          (scroll)="onTestimonialsScroll()">
+          <article
+            *ngFor="let testimonial of testimonials; let index = index; trackBy: trackByTestimonialAuthor"
+            #testimonialCard
+            class="testimonial-card"
+            [class.testimonial-card--active]="index === activeTestimonialIndex"
+            [attr.aria-label]="'Opinion ' + (index + 1) + ' de ' + testimonials.length">
+            <p>{{ testimonial.text }}</p>
+            <span>{{ testimonial.author }}</span>
+            <a
+              *ngIf="testimonial.href"
+              class="testimonial-source"
+              [href]="testimonial.href"
+              target="_blank"
+              rel="noopener noreferrer">
+              Ver resena en Google Maps
+            </a>
+          </article>
+        </div>
+
+        <button
+          class="testimonial-nav"
+          type="button"
+          aria-label="Ver opinion siguiente"
+          [disabled]="activeTestimonialIndex === testimonials.length - 1"
+          (click)="scrollTestimonials('next')">
+          &rsaquo;
+        </button>
       </div>
     </section>
 

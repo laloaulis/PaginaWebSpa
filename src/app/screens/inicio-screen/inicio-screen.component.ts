@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ServiciosComponent } from '../servicios/servicios.component';
 import { AcercaDeComponent } from '../acerca-de/acerca-de.component';
@@ -17,6 +17,12 @@ type NavigationOptions = {
   updateHistory?: boolean;
   replaceHistory?: boolean;
   scrollBehavior?: ScrollBehavior;
+};
+
+type Testimonial = {
+  text: string;
+  author: string;
+  href?: string;
 };
 
 @Component({
@@ -39,8 +45,11 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
   @ViewChild('inicioSection') inicioSection?: ElementRef<HTMLElement>;
   @ViewChild('contentSection') contentSection?: ElementRef<HTMLElement>;
   @ViewChild('fullImageSection') fullImageSection?: ElementRef<HTMLElement>;
+  @ViewChild('testimonialsTrack') testimonialsTrack?: ElementRef<HTMLElement>;
+  @ViewChildren('testimonialCard') testimonialCards?: QueryList<ElementRef<HTMLElement>>;
 
   activeComponent: ActiveSection = this.getNavigationStateFromUrl().component;
+  activeTestimonialIndex = 1;
   isMobileMenuOpen = false;
   isPromoModalOpen = false;
   isPromoImageFullscreen = false;
@@ -51,8 +60,38 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
   readonly promoDescription = 'Aprovecha un 20% de descuento en nuestro Ritual de Hidratación durante todo el mes. Incluye diagnóstico facial y masaje especializado.';
   readonly promoCtaText = 'Reservar ahora por WhatsApp';
   readonly promoCtaHref = 'https://wa.me/522291691480?text=Hola,%20quiero%20reservar%20la%20promoci%C3%B3n%20del%20mes';
+  readonly testimonials: Testimonial[] = [
+    {
+      text: 'Destacan la excelente atencion, la experiencia de Gloria y el enfoque personalizado de cada sesion segun tus necesidades.',
+      author: 'Gabriela Alejandra Mendez Castro',
+      href: 'https://maps.app.goo.gl/2DtraobQpLetNADx9'
+    },
+    {
+      text: 'Un cliente comenta que fue un regalo para su esposa, que ella lo disfruto mucho y percibio gran profesionalismo.',
+      author: 'Williams Cossio',
+      href: 'https://maps.app.goo.gl/E6mPLXNMoWCNKN7k6'
+    },
+    {
+      text: 'Resaltan el servicio, las instalaciones y un ambiente muy confortable para relajarte desde que llegas.',
+      author: 'Lalo Aulis',
+      href: 'https://maps.app.goo.gl/11hXhZEq9Zb4DHW66'
+    },
+    {
+      text: 'Mencionan que el trato es cercano desde la llegada y que cada detalle ayuda a sentirse en calma durante la cita.',
+      author: 'Atencion personalizada'
+    },
+    {
+      text: 'Valoran que el espacio se siente limpio, cuidado y agradable para desconectarse mientras reciben el tratamiento.',
+      author: 'Ambiente relajante'
+    },
+    {
+      text: 'Comparten que los tratamientos se explican con claridad y que salen con una sensacion visible de descanso.',
+      author: 'Cuidado profesional'
+    }
+  ];
 
   private scrollTimeout: ReturnType<typeof setTimeout> | null = null;
+  private testimonialsScrollRaf: number | null = null;
   private readonly scrollThreshold = 10;
   private readonly debounceTime = 100;
   private readonly mobileBreakpoint = 1100;
@@ -112,6 +151,8 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
 
   @HostListener('window:resize')
   onResize(): void {
+    requestAnimationFrame(() => this.scrollToTestimonial(this.activeTestimonialIndex, 'auto'));
+
     if (this.isMobileViewport()) {
       if (this.scrollTimeout) {
         clearTimeout(this.scrollTimeout);
@@ -158,6 +199,7 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
     });
 
     this.observeFullImageSection();
+    requestAnimationFrame(() => this.scrollToTestimonial(this.activeTestimonialIndex, 'auto'));
 
     const initialState = this.getNavigationStateFromUrl();
     if (initialState.component !== 'inicio' || initialState.fragment) {
@@ -171,6 +213,10 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.scrollTimeout) {
       clearTimeout(this.scrollTimeout);
+    }
+
+    if (this.testimonialsScrollRaf !== null) {
+      cancelAnimationFrame(this.testimonialsScrollRaf);
     }
 
     this.fullImageObserver?.disconnect();
@@ -216,6 +262,30 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
 
     this.isPromoImageFullscreen = false;
     this.setBodyScrollLock(this.isPromoModalOpen || this.isMobileMenuOpen);
+  }
+
+  scrollTestimonials(direction: 'previous' | 'next'): void {
+    const lastIndex = this.testimonials.length - 1;
+    const nextIndex = direction === 'next'
+      ? Math.min(this.activeTestimonialIndex + 1, lastIndex)
+      : Math.max(this.activeTestimonialIndex - 1, 0);
+
+    this.scrollToTestimonial(nextIndex);
+  }
+
+  onTestimonialsScroll(): void {
+    if (this.testimonialsScrollRaf !== null) {
+      return;
+    }
+
+    this.testimonialsScrollRaf = requestAnimationFrame(() => {
+      this.testimonialsScrollRaf = null;
+      this.syncActiveTestimonial();
+    });
+  }
+
+  trackByTestimonialAuthor(_index: number, testimonial: Testimonial): string {
+    return testimonial.author;
   }
 
   @HostListener('window:popstate')
@@ -277,6 +347,49 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
     );
 
     this.fullImageObserver.observe(section);
+  }
+
+  private scrollToTestimonial(index: number, behavior: ScrollBehavior = 'smooth'): void {
+    const track = this.testimonialsTrack?.nativeElement;
+    const card = this.testimonialCards?.toArray()[index]?.nativeElement;
+
+    if (!track || !card) {
+      return;
+    }
+
+    this.activeTestimonialIndex = index;
+    const left = card.offsetLeft - ((track.clientWidth - card.clientWidth) / 2);
+
+    track.scrollTo({
+      left: Math.max(left, 0),
+      behavior
+    });
+  }
+
+  private syncActiveTestimonial(): void {
+    const track = this.testimonialsTrack?.nativeElement;
+    const cards = this.testimonialCards?.toArray();
+
+    if (!track || !cards?.length) {
+      return;
+    }
+
+    const trackCenter = track.scrollLeft + (track.clientWidth / 2);
+    let closestIndex = this.activeTestimonialIndex;
+    let closestDistance = Number.POSITIVE_INFINITY;
+
+    cards.forEach((cardRef, index) => {
+      const card = cardRef.nativeElement;
+      const cardCenter = card.offsetLeft + (card.clientWidth / 2);
+      const distance = Math.abs(trackCenter - cardCenter);
+
+      if (distance < closestDistance) {
+        closestDistance = distance;
+        closestIndex = index;
+      }
+    });
+
+    this.activeTestimonialIndex = closestIndex;
   }
 
   private isMobileViewport(): boolean {
@@ -352,6 +465,7 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
       requestAnimationFrame(() => {
         this.restartHeroAnimations();
         this.observeFullImageSection();
+        this.scrollToTestimonial(this.activeTestimonialIndex, 'auto');
       });
       return;
     }
