@@ -51,15 +51,10 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
   activeComponent: ActiveSection = this.getNavigationStateFromUrl().component;
   activeTestimonialIndex = 1;
   isMobileMenuOpen = false;
-  isPromoModalOpen = false;
   isPromoImageFullscreen = false;
   lastScroll = 0;
   readonly promoImageSrc = 'assets/images/promo.jpeg';
   readonly promoImageAlt = 'Promocion del mes de Glory Spa';
-  readonly promoTitle = 'Promoción del mes: Ritual de hidratación';
-  readonly promoDescription = 'Aprovecha un 20% de descuento en nuestro Ritual de Hidratación durante todo el mes. Incluye diagnóstico facial y masaje especializado.';
-  readonly promoCtaText = 'Reservar ahora por WhatsApp';
-  readonly promoCtaHref = 'https://wa.me/522291691480?text=Hola,%20quiero%20reservar%20la%20promoci%C3%B3n%20del%20mes';
   readonly testimonials: Testimonial[] = [
     {
       text: 'Destacan la excelente atencion, la experiencia de Gloria y el enfoque personalizado de cada sesion segun tus necesidades.',
@@ -173,11 +168,6 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
       return;
     }
 
-    if (this.isPromoModalOpen) {
-      this.closePromoModal();
-      return;
-    }
-
     if (this.isMobileMenuOpen) {
       this.closeMobileMenu();
     }
@@ -235,22 +225,8 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
     this.setMobileMenuState(false);
   }
 
-  openPromoModal(): void {
+  openPromoImage(): void {
     this.closeMobileMenu();
-    this.isPromoModalOpen = true;
-    this.setBodyScrollLock(true);
-  }
-
-  closePromoModal(): void {
-    if (!this.isPromoModalOpen) {
-      return;
-    }
-
-    this.isPromoModalOpen = false;
-    this.setBodyScrollLock(this.isMobileMenuOpen);
-  }
-
-  openPromoImageFullscreen(): void {
     this.isPromoImageFullscreen = true;
     this.setBodyScrollLock(true);
   }
@@ -261,7 +237,7 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
     }
 
     this.isPromoImageFullscreen = false;
-    this.setBodyScrollLock(this.isPromoModalOpen || this.isMobileMenuOpen);
+    this.setBodyScrollLock(this.isMobileMenuOpen);
   }
 
   scrollTestimonials(direction: 'previous' | 'next'): void {
@@ -398,7 +374,7 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
 
   private setMobileMenuState(open: boolean): void {
     this.isMobileMenuOpen = open;
-    this.setBodyScrollLock(open || this.isPromoModalOpen);
+    this.setBodyScrollLock(open || this.isPromoImageFullscreen);
 
     if (open) {
       this.header?.nativeElement.classList.remove('header--scroll-down', 'header--scroll-up');
@@ -422,7 +398,6 @@ export class InicioScreenComponent implements AfterViewInit, OnDestroy {
     }: NavigationOptions
   ): void {
     this.closePromoImageFullscreen();
-    this.closePromoModal();
     this.closeMobileMenu();
     this.activeComponent = component;
 

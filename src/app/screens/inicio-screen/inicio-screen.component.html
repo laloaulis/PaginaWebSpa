@@ -105,7 +105,7 @@
         </p>
 
         <div class="buttons">
-          <button class="hero-button hero-button--primary" type="button" (click)="openPromoModal()">
+          <button class="hero-button hero-button--primary" type="button" (click)="openPromoImage()">
             Promoción del mes
           </button>
           <a
@@ -257,43 +257,8 @@
     </footer>
   </section>
 
-  <section
-    *ngIf="isPromoModalOpen"
-    class="promo-modal"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="promo-modal-title"
-    (click)="closePromoModal()">
-    <div class="promo-modal__dialog" (click)="$event.stopPropagation()">
-      <button
-        class="promo-modal__close"
-        type="button"
-        aria-label="Cerrar promocion"
-        (click)="closePromoModal()">
-        Cerrar
-      </button>
-
-      <div class="promo-modal__content">
-        <p class="promo-modal__eyebrow">Promocion vigente</p>
-
-        <figure class="promo-modal__media">
-          <img
-            class="promo-modal__image"
-            [src]="promoImageSrc"
-            [alt]="promoImageAlt"
-            (click)="openPromoImageFullscreen()"
-            role="button"
-            tabindex="0">
-        </figure>
-      </div>
-    </div>
-  </section>
-
   <section *ngIf="isPromoImageFullscreen" class="promo-fullscreen" (click)="closePromoImageFullscreen()">
-    <div class="promo-fullscreen__inner" (click)="$event.stopPropagation()">
-      <button class="promo-fullscreen__close" type="button" aria-label="Cerrar imagen" (click)="closePromoImageFullscreen()">Cerrar</button>
-      <img class="promo-fullscreen__image" [src]="promoImageSrc" [alt]="promoImageAlt">
-    </div>
+    <img class="promo-fullscreen__image" [src]="promoImageSrc" [alt]="promoImageAlt" (click)="$event.stopPropagation()">
   </section>
 
   <section class="content-section" #contentSection [attr.aria-live]="activeComponent === 'inicio' ? null : 'polite'">
